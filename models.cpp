@@ -27,9 +27,10 @@ A good paper: http://www.cl.cam.ac.uk/research/dtg/lce-pub/public/vsa23/VTC05_Em
 
 #define PI 3.14159265
 
-/* Acute Angle from Rx point to an obstacle of height (opp) and distance (adj) */ 
-double incidenceAngle(double opp, double adj){
-	return atan2(opp,adj) * 180 / PI;
+/* Acute Angle from Rx point to an obstacle of height (opp) and distance (adj) */
+double incidenceAngle(double opp, double adj)
+{
+	return atan2(opp, adj) * 180 / PI;
 }
 
 /* 
@@ -37,46 +38,49 @@ Knife edge diffraction:
 This is based upon a recognised formula like Huygens, but trades thoroughness for increased speed 
 which adds a proportional diffraction effect to obstacles.
 */
-double ked(double freq, double elev[], double rxh, double dkm){
-double obh,obd,rxobaoi=0,d,dipheight=25;
+double ked(double freq, double elev[], double rxh, double dkm)
+{
+	double obh, obd, rxobaoi = 0, d, dipheight = 25;
 
-obh=0; // Obstacle height
-obd=0; // Obstacle distance
+	obh = 0;		// Obstacle height
+	obd = 0;		// Obstacle distance
 
-dkm=dkm*1000; // KM to metres
+	dkm = dkm * 1000;	// KM to metres
 
 	// walk along path 
-	for(int n=2;n<(dkm/elev[1]);n++){
-	
-	d = (n-2)*elev[1]; // no of points * delta = km
-	
-	    //Find dip(s)
-		if(elev[n]<(obh+dipheight)){
-		
-		// Angle from Rx point to obstacle
-		rxobaoi = incidenceAngle((obh-(elev[n]+rxh)),d-obd);
-		} else{
-		// Line of sight or higher
-		rxobaoi=0;
+	for (int n = 2; n < (dkm / elev[1]); n++) {
+
+		d = (n - 2) * elev[1];	// no of points * delta = km
+
+		//Find dip(s)
+		if (elev[n] < (obh + dipheight)) {
+
+			// Angle from Rx point to obstacle
+			rxobaoi =
+			    incidenceAngle((obh - (elev[n] + rxh)), d - obd);
+		} else {
+			// Line of sight or higher
+			rxobaoi = 0;
 		}
-	
+
 		//note the highest point
-		if(elev[n]>obh){
-		obh=elev[n];
-		obd=d; 
+		if (elev[n] > obh) {
+			obh = elev[n];
+			obd = d;
 		}
-		
+
 	}
-	
-if(rxobaoi >= 0){
-	return rxobaoi / (300/freq); // Diffraction angle divided by wavelength (m)
-}else{
-	return 0;
-}
+
+	if (rxobaoi >= 0) {
+		return rxobaoi / (300 / freq);	// Diffraction angle divided by wavelength (m)
+	} else {
+		return 0;
+	}
 
 }
 
-double HATApathLoss(float f,float TxH, float RxH, float d, int mode){
+double HATApathLoss(float f, float TxH, float RxH, float d, int mode)
+{
 /*
 HATA model for cellular planning
 Frequency (MHz) 150 to 1500MHz
@@ -86,32 +90,37 @@ Distance 1-20km
 modes 1 = URBAN, 2 = SUBURBAN, 3 = OPEN
 */
 
-	if(f<150 || f>1500){
-	    printf("Error: Hata model frequency range 150-1500MHz\n");
-            exit(EXIT_FAILURE);
+	if (f < 150 || f > 1500) {
+		printf("Error: Hata model frequency range 150-1500MHz\n");
+		exit(EXIT_FAILURE);
 	}
-	float lRxH = log10(11.75*RxH);
-	float C_H = 3.2*lRxH*lRxH-4.97;
+	float lRxH = log10(11.75 * RxH);
+	float C_H = 3.2 * lRxH * lRxH - 4.97;
 	float logf = log10(f);
-	float L_u = 69.55 + 26.16*logf - 13.82*log10(TxH) - C_H + (44.9 - 6.55*log10(TxH))*log10(d);
+	float L_u =
+	    69.55 + 26.16 * logf - 13.82 * log10(TxH) - C_H + (44.9 -
+							       6.55 *
+							       log10(TxH)) *
+	    log10(d);
 
-	if(!mode || mode==1){
-	return L_u; //URBAN
-	}
-	
-	if(mode==2){ //SUBURBAN
-	float logf_28 = log10(f/28);
-	return L_u - 2*logf_28*logf_28 - 5.4;
+	if (!mode || mode == 1) {
+		return L_u;	//URBAN
 	}
 
-	if(mode==3){ //OPEN
-	return L_u - 4.78*logf*logf + 18.33*logf - 40.94;
+	if (mode == 2) {	//SUBURBAN
+		float logf_28 = log10(f / 28);
+		return L_u - 2 * logf_28 * logf_28 - 5.4;
+	}
+
+	if (mode == 3) {	//OPEN
+		return L_u - 4.78 * logf * logf + 18.33 * logf - 40.94;
 	}
 
 	return 0;
 }
 
-double COST231pathLoss(float f,float TxH, float RxH, float d, int mode){
+double COST231pathLoss(float f, float TxH, float RxH, float d, int mode)
+{
 /*
 COST231 extension to HATA model
 Frequency 1500 to 2000MHz
@@ -121,126 +130,137 @@ Distance 1-20km
 modes 1 = URBAN, 2 = SUBURBAN, 3 = OPEN
 http://morse.colorado.edu/~tlen5510/text/classwebch3.html
 */
-	if(f<150 || f>2000){
-	    printf("Error: COST231 Hata model frequency range 150-2000MHz\n");
+	if (f < 150 || f > 2000) {
+		printf
+		    ("Error: COST231 Hata model frequency range 150-2000MHz\n");
 		exit(EXIT_FAILURE);
 	}
 
-	int C = 3; // 3dB for Urban
-	float lRxH = log10(11.75*RxH);
-	float C_H = 3.2*(lRxH*lRxH)-4.97; // Large city (conservative)
+	int C = 3;		// 3dB for Urban
+	float lRxH = log10(11.75 * RxH);
+	float C_H = 3.2 * (lRxH * lRxH) - 4.97;	// Large city (conservative)
 	int c0 = 69.55;
 	int cf = 26.16;
-	if(f>1500){
-	c0=46.3;
-	cf=33.9;
+	if (f > 1500) {
+		c0 = 46.3;
+		cf = 33.9;
 	}
-	if(mode==2){
-		C = 0; // Medium city (average)
-		C_H = 8.29*(lRxH*lRxH)-1.1;
+	if (mode == 2) {
+		C = 0;		// Medium city (average)
+		C_H = 8.29 * (lRxH * lRxH) - 1.1;
 	}
-	if(mode==3){
-		C = -3; // Small city (Optimistic)
-		C_H = (1.1*log10(f) - 0.7) * RxH - (1.56 * log10(f)) + 0.8;
+	if (mode == 3) {
+		C = -3;		// Small city (Optimistic)
+		C_H = (1.1 * log10(f) - 0.7) * RxH - (1.56 * log10(f)) + 0.8;
 	}
 	float logf = log10(f);
-        double dbloss = c0 + (cf * logf) - (13.82 * log10(TxH)) - C_H + (44.9 - 6.55 * log10(TxH)) * log10(d) + C;  
+	double dbloss =
+	    c0 + (cf * logf) - (13.82 * log10(TxH)) - C_H + (44.9 -
+							     6.55 *
+							     log10(TxH)) *
+	    log10(d) + C;
 	return dbloss;
-	}
+}
 
-double SUIpathLoss(float f,float TxH, float RxH, float d, int mode){
+double SUIpathLoss(float f, float TxH, float RxH, float d, int mode)
+{
 	/*
-	f = Frequency (MHz)
-	TxH =  Transmitter height (m) 
-	RxH = Receiver height (m)
-	d = distance (km)
-	mode 1 = Hilly + trees
-	mode 2 = Flat + trees OR hilly + light foliage
-	mode 3 = Flat + light foliage
-	http://www.cl.cam.ac.uk/research/dtg/lce-pub/public/vsa23/VTC05_Empirical.pdf
-	*/
-	d=d*1000; // km to m
-	if(f<1900 || f>11000){
-	    printf("Error: SUI model frequency range 1.9-11GHz\n");
+	   f = Frequency (MHz)
+	   TxH =  Transmitter height (m) 
+	   RxH = Receiver height (m)
+	   d = distance (km)
+	   mode 1 = Hilly + trees
+	   mode 2 = Flat + trees OR hilly + light foliage
+	   mode 3 = Flat + light foliage
+	   http://www.cl.cam.ac.uk/research/dtg/lce-pub/public/vsa23/VTC05_Empirical.pdf
+	 */
+	d = d * 1000;		// km to m
+	if (f < 1900 || f > 11000) {
+		printf("Error: SUI model frequency range 1.9-11GHz\n");
 		exit(EXIT_FAILURE);
 	}
-
 	// Terrain mode A is default
 	double a = 4.6;
 	double b = 0.0075;
 	double c = 12.6;
-	double s = 10.6; // Optional fading value
+	double s = 10.6;	// Optional fading value
 	int XhCF = -10.8;
 
-	if(mode==2){
-		a=4.0;
-		b=0.0065;
-		c=17.1;
-		s=6; // average
+	if (mode == 2) {
+		a = 4.0;
+		b = 0.0065;
+		c = 17.1;
+		s = 6;		// average
 	}
-	if(mode==3){
-		a=3.6;
-		b=0.005;
-		c=20;
-		s=3; // Optimistic
+	if (mode == 3) {
+		a = 3.6;
+		b = 0.005;
+		c = 20;
+		s = 3;		// Optimistic
 		XhCF = -20;
 	}
-	double d0 = 100; 
-	double A = 20 * log10((4*M_PI*d0)/(300/f));
+	double d0 = 100;
+	double A = 20 * log10((4 * M_PI * d0) / (300 / f));
 	double y = (a - b * TxH) + c / TxH;
-	double Xf = 6 * log10(f/2000);
-	double Xh = XhCF * log10(RxH/2);
-	return A + (10*y*log10(d/d0)) + Xf + Xh + s;
+	double Xf = 6 * log10(f / 2000);
+	double Xh = XhCF * log10(RxH / 2);
+	return A + (10 * y * log10(d / d0)) + Xf + Xh + s;
 }
 
-double ECC33pathLoss(float f,float TxH, float RxH, float d, int mode){
+double ECC33pathLoss(float f, float TxH, float RxH, float d, int mode)
+{
 
-        if(f<700 || f>3500){
-            printf("Error: ECC33 model frequency range 700-3500MHz\n");
-                exit(EXIT_FAILURE);
-        }
-
+	if (f < 700 || f > 3500) {
+		printf("Error: ECC33 model frequency range 700-3500MHz\n");
+		exit(EXIT_FAILURE);
+	}
 	// MHz to GHz
-	f=f/1000;
+	f = f / 1000;
 
-	double Gr = 0.759 * RxH - 1.862; // Big city with tall buildings (1)
+	double Gr = 0.759 * RxH - 1.862;	// Big city with tall buildings (1)
 	// PL = Afs + Abm - Gb - Gr
 	double Afs = 92.4 + 20 * log10(d) + 20 * log10(f);
-	double Abm = 20.41 + 9.83 * log10(d) + 7.894 * log10(f) + 9.56 * (log10(f) * log10(f));
-	double Gb = log10(TxH/200) * (13.958 + 5.8 * (log10(d) * log10(d)));
-	if(mode>1){ // Medium city (Europe)
+	double Abm =
+	    20.41 + 9.83 * log10(d) + 7.894 * log10(f) +
+	    9.56 * (log10(f) * log10(f));
+	double Gb = log10(TxH / 200) * (13.958 + 5.8 * (log10(d) * log10(d)));
+	if (mode > 1) {		// Medium city (Europe)
 		Gr = (42.57 + 13.7 * log10(f)) * (log10(RxH) - 0.585);
 	}
-	return Afs+Abm-Gb-Gr;
+	return Afs + Abm - Gb - Gr;
 }
 
-double EricssonpathLoss(float f,float TxH, float RxH, float d, int mode){
-        /*
-	http://research.ijcaonline.org/volume84/number7/pxc3892830.pdf
-	AKA Ericsson 9999 model
-	*/
+double EricssonpathLoss(float f, float TxH, float RxH, float d, int mode)
+{
+	/*
+	   http://research.ijcaonline.org/volume84/number7/pxc3892830.pdf
+	   AKA Ericsson 9999 model
+	 */
 	// Default is Urban which bizarrely has lowest loss
-	double a0=36.2, a1=30.2, a2=-12, a3=0.1;
+	double a0 = 36.2, a1 = 30.2, a2 = -12, a3 = 0.1;
 
-        if(f<150 || f>3500){
-            printf("Error: Ericsson9999 model frequency range 150-3500MHz\n");
-                exit(EXIT_FAILURE);
-        }
+	if (f < 150 || f > 3500) {
+		printf
+		    ("Error: Ericsson9999 model frequency range 150-3500MHz\n");
+		exit(EXIT_FAILURE);
+	}
 
-	if(mode==2){ // Suburban / Med loss
-		a0=43.2;
-		a1=68.93;
+	if (mode == 2) {	// Suburban / Med loss
+		a0 = 43.2;
+		a1 = 68.93;
 	}
-	if(mode==1){ // "Rural" but has highest loss according to Ericsson.
-		a0=45.95;
-		a1=100.6;
+	if (mode == 1) {	// "Rural" but has highest loss according to Ericsson.
+		a0 = 45.95;
+		a1 = 100.6;
 	}
-	double g1 = (11.75 * RxH) * (11.75 * RxH); 
-	double g2 = (44.49 * log10(f)) - 4.78 * ((log10(f) * log10(f))); 
-	return a0 + a1 * log10(d) + a2 * log10(TxH) + a3 * log10(TxH) * log10(d) - (3.2 * log10(g1)) + g2;
+	double g1 = (11.75 * RxH) * (11.75 * RxH);
+	double g2 = (44.49 * log10(f)) - 4.78 * ((log10(f) * log10(f)));
+	return a0 + a1 * log10(d) + a2 * log10(TxH) +
+	    a3 * log10(TxH) * log10(d) - (3.2 * log10(g1)) + g2;
 }
 
-double FSPLpathLoss(float f, float d){
+double FSPLpathLoss(float f, float d)
+{
 /*
 Free Space Path Loss (ITU-R P.525) model
 Frequency: Any
@@ -251,6 +271,7 @@ Distance: Any
 	double dbloss = (20 * log10(d)) + (20 * log10(f)) + 92.45;
 	return dbloss;
 }
+
 /*
 int main(int argc, char* argv[]){
 	if(argc<5){

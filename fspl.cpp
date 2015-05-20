@@ -18,7 +18,8 @@
 
 using namespace std;
 
-double FsplLinkdB(float f, float d){
+double FsplLinkdB(float f, float d)
+{
 /*
 Free Space Path Loss model
 Frequency: Any
@@ -28,6 +29,6 @@ Distance: Any
 	f = f / 1000;
 
 	double dbloss = (20 * log10(d)) + (20 * log10(f)) + 92.45;
-   
+
 	return dbloss;
 }

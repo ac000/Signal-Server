@@ -22,9 +22,10 @@ using namespace std;
 
 #define PI 3.14159265
 
-/* Acute Angle from Rx point to an obstacle of height (opp) and distance (adj) */ 
-double incidenceAngle(double opp, double adj){
-return atan2(opp,adj) * 180 / PI;
+/* Acute Angle from Rx point to an obstacle of height (opp) and distance (adj) */
+double incidenceAngle(double opp, double adj)
+{
+	return atan2(opp, adj) * 180 / PI;
 }
 
 /* 
@@ -34,46 +35,49 @@ angle (from receive point) and the frequency. Loss increases with angle and freq
 This is not a recognised formula like Huygens, rather it is a 
 compromise for increased speed which adds a realistic diffraction effect.
 */
-double ked(double freq, double elev[], double rxh, double dkm){
-double obh,obd,rxobaoi=0,d;
+double ked(double freq, double elev[], double rxh, double dkm)
+{
+	double obh, obd, rxobaoi = 0, d;
 
-obh=0; // Obstacle height
-obd=0; // Obstacle distance
+	obh = 0;		// Obstacle height
+	obd = 0;		// Obstacle distance
 
-dkm=dkm*1000; // KM to metres
+	dkm = dkm * 1000;	// KM to metres
 
 	// walk along path 
-	for(int n=2;n<(dkm/elev[1]);n++){
-	
-	d = (n-2)*elev[1]; // no of points * delta = km
-	
-	    //Find dip(s)
-		if(elev[n]<(obh+20)){
-		
-		// Angle from Rx point to obstacle
-		rxobaoi = incidenceAngle((obh-(elev[n]+rxh)),d-obd);
-		} else{
-		// Line of sight or higher
-		rxobaoi=0;
+	for (int n = 2; n < (dkm / elev[1]); n++) {
+
+		d = (n - 2) * elev[1];	// no of points * delta = km
+
+		//Find dip(s)
+		if (elev[n] < (obh + 20)) {
+
+			// Angle from Rx point to obstacle
+			rxobaoi =
+			    incidenceAngle((obh - (elev[n] + rxh)), d - obd);
+		} else {
+			// Line of sight or higher
+			rxobaoi = 0;
 		}
-	
+
 		//note the highest point
-		if(elev[n]>obh){
-		obh=elev[n];
-		obd=d; 
+		if (elev[n] > obh) {
+			obh = elev[n];
+			obd = d;
 		}
-		
+
 	}
-	
-if(rxobaoi >= 0){
-return rxobaoi / (300/freq); // Diffraction angle divided by wavelength (m)
-}else{
-return 0;
-}
+
+	if (rxobaoi >= 0) {
+		return rxobaoi / (300 / freq);	// Diffraction angle divided by wavelength (m)
+	} else {
+		return 0;
+	}
 
 }
 
-double HataLinkdB(float f,float h_B, float h_M, float d, int mode){
+double HataLinkdB(float f, float h_B, float h_M, float d, int mode)
+{
 /*
 HATA URBAN model for cellular planning
 Frequency (MHz) 150 to 1500MHz
@@ -86,24 +90,28 @@ mode 2 = SUBURBAN
 mode 3 = OPEN
 */
 
-	float lh_M = log10(11.75*h_M);
-	float C_H = 3.2*lh_M*lh_M-4.97;
-	
+	float lh_M = log10(11.75 * h_M);
+	float C_H = 3.2 * lh_M * lh_M - 4.97;
+
 	float logf = log10(f);
-	
-	float L_u = 69.55 + 26.16*logf - 13.82*log10(h_B) - C_H + (44.9 - 6.55*log10(h_B))*log10(d);
 
-	if(!mode || mode==1){
-	return L_u; //URBAN
-	}
-	
-	if(mode==2){ //SUBURBAN
-	float logf_28 = log10(f/28);
-	return L_u - 2*logf_28*logf_28 - 5.4;
+	float L_u =
+	    69.55 + 26.16 * logf - 13.82 * log10(h_B) - C_H + (44.9 -
+							       6.55 *
+							       log10(h_B)) *
+	    log10(d);
+
+	if (!mode || mode == 1) {
+		return L_u;	//URBAN
 	}
 
-	if(mode==3){ //OPEN
-	return L_u - 4.78*logf*logf + 18.33*logf - 40.94;
+	if (mode == 2) {	//SUBURBAN
+		float logf_28 = log10(f / 28);
+		return L_u - 2 * logf_28 * logf_28 - 5.4;
+	}
+
+	if (mode == 3) {	//OPEN
+		return L_u - 4.78 * logf * logf + 18.33 * logf - 40.94;
 	}
 
 	return 0;

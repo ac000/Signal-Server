@@ -18,7 +18,8 @@
 
 using namespace std;
 
-double CostHataLinkdB(float f,float h_B, float h_M, float d){
+double CostHataLinkdB(float f, float h_B, float h_M, float d)
+{
 /*
 COST HATA URBAN model
 Frequency 1500 to 2000MHz
@@ -27,15 +28,18 @@ h_M = Mobile station height 1 to 10m
 Distance 1-20km
 */
 
-	int C = 0; // 0dB for suburban
-	
-	float lh_M = log10(11.75*h_M);
-	float C_H = 3.2*lh_M*lh_M-4.97;
-	
-	float logf = log10(f);
-	
-    double dbloss = 46.3 + (33.9 * logf) - (13.82 * log10(h_B)) - C_H + (44.9 - 6.55 * log10(h_B)) * log10(d) + C;  
+	int C = 0;		// 0dB for suburban
 
+	float lh_M = log10(11.75 * h_M);
+	float C_H = 3.2 * lh_M * lh_M - 4.97;
+
+	float logf = log10(f);
+
+	double dbloss =
+	    46.3 + (33.9 * logf) - (13.82 * log10(h_B)) - C_H + (44.9 -
+								 6.55 *
+								 log10(h_B)) *
+	    log10(d) + C;
 
 	return dbloss;
 }
