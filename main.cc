@@ -24,9 +24,9 @@ double version = 2.44;
 /*
 REQUIRES GCC >= 4.7
 90m mode
-g++ -Wall -Ofast -s -lm itwom3.0.cpp models.cpp main.cpp -o signalserver
+g++ -Wall -Ofast -s -lm models/itwom3.0.cc models/models.cc main.cc -o signalserver
 30m HD mode
-g++ -Wall -Ofast -s -lm itwom3.0.cpp models.cpp main.cpp -DHD -o signalserverHD
+g++ -Wall -Ofast -s -lm models/itwom3.0.cc models/models.cc main.cc -DHD -o signalserverHD
 */
 
 #include <stdio.h>

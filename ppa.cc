@@ -19,7 +19,7 @@
 *  for more details.							     *
 *									     *
 ******************************************************************************
-* g++ -Wall -O3 -s -lm -fomit-frame-pointer itm.cpp ppa.cpp -o ppa     * 
+* g++ -Wall -O3 -s -lm -fomit-frame-pointer models/itm.cc ppa.cc -o ppa      *
 \****************************************************************************/
 
 #include <stdio.h>
