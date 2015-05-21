@@ -1,31 +1,30 @@
-CC=gcc
-CXX=g++
-CFLAGS=-Wall -O3 -s -fomit-frame-pointer
-CXXFLAGS=
-LDFLAGS=
-LIBS=-lm
+SHELL		= /bin/sh
 
-objects = main.o models.o itwom3.0.o sdf.o
+CC		= gcc
+CXX		= g++
+CFLAGS		= -Wall -O3 -s -fomit-frame-pointer
+CXXFLAGS	= -Wall -O3 -s -fomit-frame-pointer
+LIBS		= -lm
+
+VPATH		= models
+objects 	= main.o models.o itwom3.0.o sdf.o
+
+%.o : %.cc
+	@echo -e "  CXX\t$@"
+	@$ $(CXX) $(CXXFLAGS) -c $<
+
+%.o : %.c
+	@echo -e "  CC\t$@"
+	@$ $(CC) $(CFLAGS) -c $<
 
 signalserver: $(objects)
 	@echo -e "  LNK\t$@"
-	@$(CXX) $(LDFLAGS) $(objects) -o signalserver ${LIBS}
+	@$(CXX) $(objects) -o $@ ${LIBS}
 
-main.o: main.cpp itwom3.0.cpp sdf.c common.h
-	@echo -e "  CXX\t$@"
-	@$(CXX) $(CFLAGS) -c main.cpp ${INCS}
-
-models.o: models.cpp
-	@echo -e "  CXX\t$@"
-	@$(CXX) $(CFLAGS) -c models.cpp ${INCS}
-
-itwom3.0.o: itwom3.0.cpp
-	@echo -e "  CXX\t$@"
-	@$(CXX) $(CFLAGS) -c itwom3.0.cpp ${INCS}
+main.o: main.cc models.cc itwom3.0.cc sdf.c common.h
 
 sdf.o: sdf.c common.h
-	@echo -e "  CC\t$@"
-	@$(CC) $(CFLAGS) -c sdf.c ${INCS}
 
+.PHONY: clean
 clean:
-	rm -f *.o signalserver
+	rm -f $(objects) signalserver
