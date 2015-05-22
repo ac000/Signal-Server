@@ -34,6 +34,11 @@ double version = 2.44;
 #include "models/itwom3.0.hh"
 #include "models/los.hh"
 
+// 90m mode (default)
+int MAXPAGES = 64;
+int ARRAYSIZE = 76810;
+int IPPD = 1200;
+
 char string[255], sdf_path[255], udt_file[255], opened = 0, gpsav =
     0, ss_name[16], dashes[80];
 
@@ -48,10 +53,10 @@ int min_north = 90, max_north = -90, min_west = 360, max_west = -1, ippd, mpi,
 
 unsigned char got_elevation_pattern, got_azimuth_pattern, metric = 0, dbm = 0;
 
-double elev[ARRAYSIZE + 10];
+double *elev;
 
 struct site tx_site[2];
-struct dem dem[MAXPAGES];
+struct dem *dem;
 struct path path;
 struct LR LR;
 struct region region;
@@ -916,6 +921,58 @@ void ObstructionAnalysis(struct site xmtr, struct site rcvr, double f,
 
 }
 
+static void free_dem(void)
+{
+	int i;
+	int j;
+
+	for (i = 0; i < MAXPAGES; i++) {
+		for (j = 0; j < IPPD; j++) {
+			delete [] dem[i].data[j];
+			delete [] dem[i].mask[j];
+			delete [] dem[i].signal[j];
+		}
+		delete [] dem[i].data;
+		delete [] dem[i].mask;
+		delete [] dem[i].signal;
+	}
+	delete [] dem;
+}
+
+static void free_path(void)
+{
+	delete [] path.lat;
+	delete [] path.lon;
+	delete [] path.elevation;
+	delete [] path.distance;
+}
+
+static void alloc_dem(void)
+{
+	int i;
+	int j;
+
+	dem = new struct dem[MAXPAGES];
+	for (i = 0; i < MAXPAGES; i++) {
+		dem[i].data = new short *[IPPD];
+		dem[i].mask = new unsigned char *[IPPD];
+		dem[i].signal = new unsigned char *[IPPD];
+		for (j = 0; j < IPPD; j++) {
+			dem[i].data[j] = new short[IPPD];
+			dem[i].mask[j] = new unsigned char[IPPD];
+			dem[i].signal[j] = new unsigned char[IPPD];
+		}
+	}
+}
+
+static void alloc_path(void)
+{
+	path.lat = new double[ARRAYSIZE];
+	path.lon = new double[ARRAYSIZE];
+	path.elevation = new double[ARRAYSIZE];
+	path.distance = new double[ARRAYSIZE];
+}
+
 int main(int argc, char *argv[])
 {
 	int x, y, z = 0, min_lat, min_lon, max_lat, max_lon,
@@ -931,13 +988,19 @@ int main(int argc, char *argv[])
 	double altitude = 0.0, altitudeLR = 0.0, tx_range = 0.0,
 	    rx_range = 0.0, deg_range = 0.0, deg_limit = 0.0, deg_range_lon;
 
+	if (strstr(argv[0], "signalserverHD")) {
+		MAXPAGES = 9;
+		ARRAYSIZE = 14844;
+		IPPD = 3600;
+	}
+
 	strncpy(ss_name, "Signal Server\0", 14);
 
 	if (argc == 1) {
 
 		fprintf(stdout, "\n\t\t -- %s %.2f --\n", ss_name, version);
 		fprintf(stdout,
-			"\tCompiled for %d tiles at %d pixels/degree\n\n",
+			"\tSet for %d tiles at %d pixels/degree\n\n",
 			MAXPAGES, IPPD);
 		fprintf(stdout, "     -d Directory containing .sdf tiles\n");
 		fprintf(stdout,
@@ -989,6 +1052,14 @@ int main(int argc, char *argv[])
 
 		return 1;
 	}
+
+	/*
+	 * Now we know what mode we are running in, we can allocate various
+	 * data structures.
+	 */
+	elev = new double[ARRAYSIZE + 10];
+	alloc_dem();
+	alloc_path();
 
 	y = argc - 1;
 
@@ -1612,5 +1683,10 @@ int main(int argc, char *argv[])
 			   normalise);
 	}
 	fflush(stdout);
+
+	delete [] elev;
+	free_dem();
+	free_path();
+
 	return 0;
 }

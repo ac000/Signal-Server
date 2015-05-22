@@ -23,16 +23,18 @@ error:
 endif
 
 %.o : %.cc
-	@echo -e "  CXX\t$@"
+	@echo -e "    CXX\t$@"
 	@$ $(CXX) $(CXXFLAGS) -c $<
 
 %.o : %.c
-	@echo -e "  CC\t$@"
+	@echo -e "    CC\t$@"
 	@$ $(CC) $(CFLAGS) -c $<
 
 signalserver: $(objects)
-	@echo -e "  LNK\t$@"
+	@echo -e "    LNK\t$@"
 	@$(CXX) $(objects) -o $@ ${LIBS}
+	@echo -e " SYMLNK\tsignalserverHD -> $@"
+	@ln -sf $@ signalserverHD
 
 main.o: main.cc common.h inputs.hh outputs.hh itwom3.0.hh los.hh
 
@@ -46,4 +48,4 @@ los.o: los.cc common.h main.hh cost.hh ecc33.hh ericsson.hh fspl.hh hata.hh \
 
 .PHONY: clean
 clean:
-	rm -f $(objects) signalserver
+	rm -f $(objects) signalserver signalserverHD

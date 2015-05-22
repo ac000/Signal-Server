@@ -1,18 +1,6 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-#ifdef HD
-  // HD mode, 30m res
-  #define MAXPAGES 9
-  #define ARRAYSIZE 14844
-  #define IPPD 3600
-#else
-  // 90m mode (default)
-  #define MAXPAGES 64
-  #define ARRAYSIZE 76810
-  #define IPPD 1200
-#endif
-
 #define GAMMA 		2.5
 
 #ifndef PI
@@ -41,9 +29,9 @@ struct dem {
 	int max_west;
 	int max_el;
 	int min_el;
-	short data[IPPD][IPPD];
-	unsigned char mask[IPPD][IPPD];
-	unsigned char signal[IPPD][IPPD];
+	short **data;
+	unsigned char **mask;
+	unsigned char **signal;
 };
 
 struct site {
@@ -55,10 +43,10 @@ struct site {
 };
 
 struct path {
-	double lat[ARRAYSIZE];
-	double lon[ARRAYSIZE];
-	double elevation[ARRAYSIZE];
-	double distance[ARRAYSIZE];
+	double *lat;
+	double *lon;
+	double *elevation;
+	double *distance;
 	int length;
 };
 
@@ -80,6 +68,10 @@ struct region {
 	int level[128];
 	int levels;
 };
+
+extern int MAXPAGES;
+extern int ARRAYSIZE;
+extern int IPPD;
 
 extern int min_north;
 extern int max_north;
@@ -106,7 +98,7 @@ extern double clutter;
 extern double dBm;
 extern double loss;
 extern double field_strength;
-extern double elev[];
+extern double *elev;
 
 extern char string[];
 extern char sdf_path[];
@@ -117,7 +109,7 @@ extern unsigned char got_azimuth_pattern;
 extern unsigned char metric;
 extern unsigned char dbm;
 
-extern struct dem dem[];
+extern struct dem *dem;
 extern struct path path;
 extern struct LR LR;
 extern struct region region;
