@@ -15,7 +15,7 @@ int LoadSDF_SDF(char *name, int winfiles)
 	   quadrangle limits are stored in the first available
 	   dem[] structure. */
 
-	int x, y, data, indx, minlat, minlon, maxlat, maxlon, j;
+	int x, y, data = 0, indx, minlat, minlon, maxlat, maxlon, j;
 	char found, free_page = 0, line[20], jline[20], sdf_file[255],
 	    path_plus_name[255], *junk = NULL;
 
