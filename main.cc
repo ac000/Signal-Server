@@ -156,7 +156,7 @@ int PutMask(double lat, double lon, int value)
 	   bits in the mask based on the latitude and longitude of the
 	   area pointed to. */
 
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 	char found;
 
 	for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
@@ -186,7 +186,7 @@ int OrMask(double lat, double lon, int value)
 	   the mask based on the latitude and longitude of the area
 	   pointed to. */
 
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 	char found;
 
 	for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
@@ -224,7 +224,7 @@ int PutSignal(double lat, double lon, unsigned char signal)
 	snprintf(dotfile, 80, "%s.dot%c", tx_site[0].filename, 0);
 	snprintf(dotfile, 80, "%s.dot%c", tx_site[0].filename, 0);
 
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 	char found;
 
 	if (signal > hottest)	// dBm, dBuV
@@ -258,7 +258,7 @@ unsigned char GetSignal(double lat, double lon)
 	   specified location that was previously written by the
 	   complimentary PutSignal() function. */
 
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 	char found;
 
 	for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
@@ -284,7 +284,7 @@ double GetElevation(struct site location)
 	   Function returns -5000.0 for locations not found in memory. */
 
 	char found;
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 	double elevation;
 
 	for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
@@ -315,7 +315,7 @@ int AddElevation(double lat, double lon, double height)
 	   not found in memory. */
 
 	char found;
-	int x, y, indx;
+	int x = 0, y = 0, indx;
 
 	for (indx = 0, found = 0; indx < MAXPAGES && found == 0;) {
 		x = (int)rint(ppd * (lat - dem[indx].min_north));

@@ -27,7 +27,7 @@ void DoPathLoss(char *filename, unsigned char geo, unsigned char kml,
 	char mapfile[255];
 	unsigned width, height, red, green, blue, terrain = 0;
 	unsigned char found, mask, cityorcounty;
-	int indx, x, y, z, x0, y0, loss, match;
+	int indx, x, y, z, x0 = 0, y0 = 0, loss, match;
 	double lat, lon, conversion, one_over_gamma, minwest;
 	FILE *fd;
 
@@ -259,7 +259,7 @@ void DoSigStr(char *filename, unsigned char geo, unsigned char kml,
 	char mapfile[255];
 	unsigned width, height, terrain, red, green, blue;
 	unsigned char found, mask, cityorcounty;
-	int indx, x, y, z = 1, x0, y0, signal, match;
+	int indx, x, y, z = 1, x0 = 0, y0 = 0, signal, match;
 	double conversion, one_over_gamma, lat, lon, minwest;
 	FILE *fd;
 
@@ -502,7 +502,7 @@ void DoRxdPwr(char *filename, unsigned char geo, unsigned char kml,
 	char mapfile[255];
 	unsigned width, height, terrain, red, green, blue;
 	unsigned char found, mask, cityorcounty;
-	int indx, x, y, z = 1, x0, y0, dBm, match;
+	int indx, x, y, z = 1, x0 = 0, y0 = 0, dBm, match;
 	double conversion, one_over_gamma, lat, lon, minwest;
 	FILE *fd;
 
@@ -748,7 +748,7 @@ void DoLOS(char *filename, unsigned char geo, unsigned char kml,
 	char mapfile[255];
 	unsigned width, height, terrain;
 	unsigned char found, mask;
-	int indx, x, y, x0, y0;
+	int indx, x, y, x0 = 0, y0 = 0;
 	double conversion, one_over_gamma, lat, lon, minwest;
 	FILE *fd;
 
