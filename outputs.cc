@@ -7,11 +7,11 @@
 #include "common.h"
 #include "main.hh"
 #include "inputs.hh"
-#include "models/models.hh"
 #include "models/cost.hh"
 #include "models/ecc33.hh"
 #include "models/ericsson.hh"
 #include "models/fspl.hh"
+#include "models/hata.hh"
 #include "models/itwom3.0.hh"
 #include "models/sui.hh"
 

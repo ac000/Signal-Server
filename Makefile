@@ -7,8 +7,8 @@ CXXFLAGS	= -Wall -O3 -s -fomit-frame-pointer
 LIBS		= -lm
 
 VPATH		= models
-objects 	= main.o models.o cost.o ecc33.o ericsson.o fspl.o hata.o \
-		  itwom3.0.o los.o sui.o inputs.o outputs.o
+objects 	= main.o cost.o ecc33.o ericsson.o fspl.o hata.o itwom3.0.o \
+		  los.o sui.o inputs.o outputs.o
 
 GCC_MAJOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 1)
 GCC_MINOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 2)
@@ -34,15 +34,15 @@ signalserver: $(objects)
 	@echo -e "  LNK\t$@"
 	@$(CXX) $(objects) -o $@ ${LIBS}
 
-main.o: main.cc common.h inputs.hh outputs.hh models.hh itwom3.0.hh los.hh
+main.o: main.cc common.h inputs.hh outputs.hh itwom3.0.hh los.hh
 
 inputs.o: inputs.cc common.h main.hh
 
-outputs.o: outputs.cc common.h inputs.hh main.hh models.hh cost.hh ecc33.hh \
-	   ericsson.hh fspl.hh itwom3.0.hh sui.hh
+outputs.o: outputs.cc common.h inputs.hh main.hh cost.hh ecc33.hh ericsson.hh \
+	   fspl.hh hata.hh itwom3.0.hh sui.hh
 
-los.o: los.cc common.h main.hh ecc33.hh fspl.hh hata.hh models.hh itwom3.0.hh \
-       sui.hh
+los.o: los.cc common.h main.hh cost.hh ecc33.hh ericsson.hh fspl.hh hata.hh \
+       itwom3.0.hh sui.hh
 
 .PHONY: clean
 clean:

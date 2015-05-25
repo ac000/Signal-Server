@@ -31,7 +31,6 @@ double version = 2.44;
 #include "common.h"
 #include "inputs.hh"
 #include "outputs.hh"
-#include "models/models.hh"
 #include "models/itwom3.0.hh"
 #include "models/los.hh"
 
