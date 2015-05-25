@@ -3,6 +3,7 @@
 
 #include "../common.h"
 #include "../main.hh"
+#include "ecc33.hh"
 #include "fspl.hh"
 #include "hata.hh"
 #include "models.hh"

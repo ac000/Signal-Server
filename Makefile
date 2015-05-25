@@ -7,8 +7,8 @@ CXXFLAGS	= -Wall -O3 -s -fomit-frame-pointer
 LIBS		= -lm
 
 VPATH		= models
-objects 	= main.o models.o cost.o ericsson.o fspl.o hata.o itwom3.0.o \
-		  los.o inputs.o outputs.o
+objects 	= main.o models.o cost.o ecc33.o ericsson.o fspl.o hata.o \
+		  itwom3.0.o los.o inputs.o outputs.o
 
 GCC_MAJOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 1)
 GCC_MINOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 2)
@@ -38,10 +38,10 @@ main.o: main.cc common.h inputs.hh outputs.hh models.hh itwom3.0.hh los.hh
 
 inputs.o: inputs.cc common.h main.hh
 
-outputs.o: outputs.cc common.h inputs.hh main.hh models.hh cost.hh \
+outputs.o: outputs.cc common.h inputs.hh main.hh models.hh cost.hh ecc33.hh \
 	   ericsson.hh fspl.hh itwom3.0.hh
 
-los.o: los.cc common.h main.hh fspl.hh hata.hh models.hh itwom3.0.hh
+los.o: los.cc common.h main.hh ecc33.hh fspl.hh hata.hh models.hh itwom3.0.hh
 
 .PHONY: clean
 clean:
