@@ -7,7 +7,7 @@ CXXFLAGS	= -Wall -O3 -s -fomit-frame-pointer
 LIBS		= -lm
 
 VPATH		= models
-objects 	= main.o models.o itwom3.0.o los.o inputs.o outputs.o
+objects 	= main.o models.o fspl.o itwom3.0.o los.o inputs.o outputs.o
 
 GCC_MAJOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 1)
 GCC_MINOR	:= $(shell $(CXX) -dumpversion 2>&1 | cut -d . -f 2)

@@ -12,13 +12,9 @@
 *  for more details.							     *
 *									     */
 
-#include <stdlib.h>
 #include <math.h>
-#include <iostream>
 
-using namespace std;
-
-double FsplLinkdB(float f, float d)
+double FSPLpathLoss(float f, float d)
 {
 /*
 Free Space Path Loss model

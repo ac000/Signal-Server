@@ -8,6 +8,7 @@
 #include "main.hh"
 #include "inputs.hh"
 #include "models/models.hh"
+#include "models/fspl.hh"
 #include "models/itwom3.0.hh"
 
 void DoPathLoss(char *filename, unsigned char geo, unsigned char kml,

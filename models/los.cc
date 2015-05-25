@@ -3,6 +3,7 @@
 
 #include "../common.h"
 #include "../main.hh"
+#include "fspl.hh"
 #include "models.hh"
 #include "itwom3.0.hh"
 

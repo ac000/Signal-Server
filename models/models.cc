@@ -259,19 +259,6 @@ double EricssonpathLoss(float f, float TxH, float RxH, float d, int mode)
 	    a3 * log10(TxH) * log10(d) - (3.2 * log10(g1)) + g2;
 }
 
-double FSPLpathLoss(float f, float d)
-{
-/*
-Free Space Path Loss (ITU-R P.525) model
-Frequency: Any
-Distance: Any 
-*/
-	//MHz to GHz
-	f = f / 1000;
-	double dbloss = (20 * log10(d)) + (20 * log10(f)) + 92.45;
-	return dbloss;
-}
-
 /*
 int main(int argc, char* argv[]){
 	if(argc<5){
