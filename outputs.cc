@@ -8,6 +8,7 @@
 #include "main.hh"
 #include "inputs.hh"
 #include "models/models.hh"
+#include "models/cost.hh"
 #include "models/fspl.hh"
 #include "models/itwom3.0.hh"
 
