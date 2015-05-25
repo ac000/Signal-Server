@@ -1394,8 +1394,7 @@ void PathReport(struct site source, struct site destination, char *name,
 			switch (propmodel) {
 			case 1:
 				// Longley Rice ITM
-				point_to_point_ITM(elev,
-						   source.alt * METERS_PER_FOOT,
+				point_to_point_ITM(source.alt * METERS_PER_FOOT,
 						   destination.alt *
 						   METERS_PER_FOOT,
 						   LR.eps_dielect,
@@ -1444,8 +1443,7 @@ void PathReport(struct site source, struct site destination, char *name,
 				break;
 			case 8:
 				// ITWOM 3.0
-				point_to_point(elev,
-					       source.alt * METERS_PER_FOOT,
+				point_to_point(source.alt * METERS_PER_FOOT,
 					       destination.alt *
 					       METERS_PER_FOOT, LR.eps_dielect,
 					       LR.sgm_conductivity,
@@ -1465,8 +1463,7 @@ void PathReport(struct site source, struct site destination, char *name,
 				break;
 
 			default:
-				point_to_point_ITM(elev,
-						   source.alt * METERS_PER_FOOT,
+				point_to_point_ITM(source.alt * METERS_PER_FOOT,
 						   destination.alt *
 						   METERS_PER_FOOT,
 						   LR.eps_dielect,

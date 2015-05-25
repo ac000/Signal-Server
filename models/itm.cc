@@ -25,6 +25,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "../common.h"
+
 #define THIRD  (1.0/3.0)
 
 using namespace std;
@@ -1204,11 +1206,10 @@ double deg2rad(double d)
 //* Point-To-Point Mode Calculations                     *
 //********************************************************
 
-void point_to_point(double elev[], double tht_m, double rht_m,
-		    double eps_dielect, double sgm_conductivity,
-		    double eno_ns_surfref, double frq_mhz, int radio_climate,
-		    int pol, double conf, double rel, double &dbloss,
-		    char *strmode, int &errnum)
+void point_to_point(double tht_m, double rht_m, double eps_dielect,
+		    double sgm_conductivity, double eno_ns_surfref,
+		    double frq_mhz, int radio_climate, int pol, double conf,
+		    double rel, double &dbloss, char *strmode, int &errnum)
 {
 	// pol: 0-Horizontal, 1-Vertical
 	// radio_climate: 1-Equatorial, 2-Continental Subtropical, 3-Maritime Tropical,
@@ -1291,10 +1292,10 @@ void point_to_point(double elev[], double tht_m, double rht_m,
 	errnum = prop.kwx;
 }
 
-void point_to_pointMDH(double elev[], double tht_m, double rht_m,
-		       double eps_dielect, double sgm_conductivity,
-		       double eno_ns_surfref, double frq_mhz, int radio_climate,
-		       int pol, double timepct, double locpct, double confpct,
+void point_to_pointMDH(double tht_m, double rht_m, double eps_dielect,
+		       double sgm_conductivity, double eno_ns_surfref,
+		       double frq_mhz, int radio_climate, int pol,
+		       double timepct, double locpct, double confpct,
 		       double &dbloss, int &propmode, double &deltaH,
 		       int &errnum)
 {
@@ -1387,11 +1388,10 @@ void point_to_pointMDH(double elev[], double tht_m, double rht_m,
 	errnum = prop.kwx;
 }
 
-void point_to_pointDH(double elev[], double tht_m, double rht_m,
-		      double eps_dielect, double sgm_conductivity,
-		      double eno_ns_surfref, double frq_mhz, int radio_climate,
-		      int pol, double conf, double rel, double &dbloss,
-		      double &deltaH, int &errnum)
+void point_to_pointDH(double tht_m, double rht_m, double eps_dielect,
+		      double sgm_conductivity, double eno_ns_surfref,
+		      double frq_mhz, int radio_climate, int pol, double conf,
+		      double rel, double &dbloss, double &deltaH, int &errnum)
 {
 	// pol: 0-Horizontal, 1-Vertical
 	// radio_climate: 1-Equatorial, 2-Continental Subtropical, 3-Maritime Tropical,
