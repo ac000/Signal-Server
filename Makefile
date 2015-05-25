@@ -34,13 +34,13 @@ signalserver: $(objects)
 	@echo -e "  LNK\t$@"
 	@$(CXX) $(objects) -o $@ ${LIBS}
 
-main.o: main.cc models.cc itwom3.0.cc los.cc inputs.cc outputs.cc common.h
+main.o: main.cc common.h inputs.hh outputs.hh models.hh itwom3.0.hh los.hh
 
-inputs.o: inputs.cc common.h
+inputs.o: inputs.cc common.h main.hh
 
-outputs.o: outputs.cc common.h
+outputs.o: outputs.cc common.h inputs.hh main.hh models.hh fspl.hh itwom3.0.hh
 
-los.o: los.cc common.h
+los.o: los.cc common.h main.hh fspl.hh hata.hh models.hh itwom3.0.hh
 
 .PHONY: clean
 clean:
