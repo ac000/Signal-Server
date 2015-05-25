@@ -79,46 +79,6 @@ double ked(double freq, double elev[], double rxh, double dkm)
 
 }
 
-double HATApathLoss(float f, float TxH, float RxH, float d, int mode)
-{
-/*
-HATA model for cellular planning
-Frequency (MHz) 150 to 1500MHz
-Base station height 30-200m
-Mobile station height 1-10m
-Distance 1-20km
-modes 1 = URBAN, 2 = SUBURBAN, 3 = OPEN
-*/
-
-	if (f < 150 || f > 1500) {
-		printf("Error: Hata model frequency range 150-1500MHz\n");
-		exit(EXIT_FAILURE);
-	}
-	float lRxH = log10(11.75 * RxH);
-	float C_H = 3.2 * lRxH * lRxH - 4.97;
-	float logf = log10(f);
-	float L_u =
-	    69.55 + 26.16 * logf - 13.82 * log10(TxH) - C_H + (44.9 -
-							       6.55 *
-							       log10(TxH)) *
-	    log10(d);
-
-	if (!mode || mode == 1) {
-		return L_u;	//URBAN
-	}
-
-	if (mode == 2) {	//SUBURBAN
-		float logf_28 = log10(f / 28);
-		return L_u - 2 * logf_28 * logf_28 - 5.4;
-	}
-
-	if (mode == 3) {	//OPEN
-		return L_u - 4.78 * logf * logf + 18.33 * logf - 40.94;
-	}
-
-	return 0;
-}
-
 double COST231pathLoss(float f, float TxH, float RxH, float d, int mode)
 {
 /*

@@ -12,71 +12,9 @@
 *  for more details.							     *
 *									     */
 
-#include <stdlib.h>
 #include <math.h>
-#include <iostream>
-#include <stdio.h>
-#include <string>
 
-using namespace std;
-
-#define PI 3.14159265
-
-/* Acute Angle from Rx point to an obstacle of height (opp) and distance (adj) */
-double incidenceAngle(double opp, double adj)
-{
-	return atan2(opp, adj) * 180 / PI;
-}
-
-/* 
-Knife edge diffraction:
-This custom function adds to the overall path loss based upon the obstacle 
-angle (from receive point) and the frequency. Loss increases with angle and frequency.
-This is not a recognised formula like Huygens, rather it is a 
-compromise for increased speed which adds a realistic diffraction effect.
-*/
-double ked(double freq, double elev[], double rxh, double dkm)
-{
-	double obh, obd, rxobaoi = 0, d;
-
-	obh = 0;		// Obstacle height
-	obd = 0;		// Obstacle distance
-
-	dkm = dkm * 1000;	// KM to metres
-
-	// walk along path 
-	for (int n = 2; n < (dkm / elev[1]); n++) {
-
-		d = (n - 2) * elev[1];	// no of points * delta = km
-
-		//Find dip(s)
-		if (elev[n] < (obh + 20)) {
-
-			// Angle from Rx point to obstacle
-			rxobaoi =
-			    incidenceAngle((obh - (elev[n] + rxh)), d - obd);
-		} else {
-			// Line of sight or higher
-			rxobaoi = 0;
-		}
-
-		//note the highest point
-		if (elev[n] > obh) {
-			obh = elev[n];
-			obd = d;
-		}
-
-	}
-
-	if (rxobaoi >= 0) {
-		return rxobaoi / (300 / freq);	// Diffraction angle divided by wavelength (m)
-	} else {
-		return 0;
-	}
-
-}
-
-double HataLinkdB(float f, float h_B, float h_M, float d, int mode)
+double HATApathLoss(float f, float h_B, float h_M, float d, int mode)
 {
 /*
 HATA URBAN model for cellular planning
