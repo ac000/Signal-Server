@@ -13,6 +13,7 @@
 #include "models/ericsson.hh"
 #include "models/fspl.hh"
 #include "models/itwom3.0.hh"
+#include "models/sui.hh"
 
 void DoPathLoss(char *filename, unsigned char geo, unsigned char kml,
 		unsigned char ngs, struct site *xmtr, unsigned char txsites)

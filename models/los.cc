@@ -8,6 +8,7 @@
 #include "hata.hh"
 #include "models.hh"
 #include "itwom3.0.hh"
+#include "sui.hh"
 
 /*
  * Acute Angle from Rx point to an obstacle of height (opp) and
