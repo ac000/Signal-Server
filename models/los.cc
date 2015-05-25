@@ -8,6 +8,61 @@
 #include "models.hh"
 #include "itwom3.0.hh"
 
+/*
+ * Acute Angle from Rx point to an obstacle of height (opp) and
+ * distance (adj)
+ */
+static double incidenceAngle(double opp, double adj)
+{
+	return atan2(opp, adj) * 180 / PI;
+}
+
+/*
+ * Knife edge diffraction:
+ * This is based upon a recognised formula like Huygens, but trades
+ * thoroughness for increased speed which adds a proportional diffraction
+ * effect to obstacles.
+ */
+static double ked(double freq, double rxh, double dkm)
+{
+	double obh, obd, rxobaoi = 0, d, dipheight = 25;
+
+	obh = 0;		// Obstacle height
+	obd = 0;		// Obstacle distance
+
+	dkm = dkm * 1000;	// KM to metres
+
+	// walk along path
+	for (int n = 2; n < (dkm / elev[1]); n++) {
+
+		d = (n - 2) * elev[1];	// no of points * delta = km
+
+		//Find dip(s)
+		if (elev[n] < (obh + dipheight)) {
+
+			// Angle from Rx point to obstacle
+			rxobaoi =
+			    incidenceAngle((obh - (elev[n] + rxh)), d - obd);
+		} else {
+			// Line of sight or higher
+			rxobaoi = 0;
+		}
+
+		//note the highest point
+		if (elev[n] > obh) {
+			obh = elev[n];
+			obd = d;
+		}
+
+	}
+
+	if (rxobaoi >= 0) {
+		return rxobaoi / (300 / freq);	// Diffraction angle divided by wavelength (m)
+	} else {
+		return 0;
+	}
+}
+
 void PlotLOSPath(struct site source, struct site destination, char mask_value,
 		 FILE *fd)
 {
@@ -314,7 +369,7 @@ void PlotPropPath(struct site source, struct site destination,
 
 			if (knifeedge == 1) {
 				diffloss =
-				    ked(LR.frq_mhz, elev,
+				    ked(LR.frq_mhz,
 					destination.alt * METERS_PER_FOOT, dkm);
 				loss += (diffloss);	// ;)
 			}
